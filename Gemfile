@@ -31,11 +31,11 @@ gem 'bootstrap-sass'
 gem 'devise'
 gem 'haml-rails'
 
-group :test do
-  gem 'debugger'
+group :test, :development do
+  gem 'pry', '~> 0.9.12.6'
   gem 'database_cleaner'
   gem 'fabrication'
   gem 'rspec-rails', '~> 3.0.0.beta'
-  gem 'vcr'
+  gem 'vcr', '~> 2.8.0'
   gem 'webmock'
 end

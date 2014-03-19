@@ -12,8 +12,14 @@ module BambooHR
       user.name = data["displayName"]
       user.email = data["workEmail"]
       user.department = data["department"]
+      user.password = generate_password
+      user.password_confirmation = user.password
 
       user.save
+    end
+
+    def self.generate_password
+      Time.now.to_i
     end
 
     def self.client
