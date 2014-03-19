@@ -34,7 +34,7 @@ describe 'Events API', api: true do
   end
 
   context 'POST events' do
-    context 'when passing a valid authentication token or none' do
+    context 'when passing a valid authentication token' do
       let!(:user) { Fabricate(:user) }
 
       let(:base_params) do
@@ -80,6 +80,42 @@ describe 'Events API', api: true do
         end
       end
     end
+  end
 
+  context 'PUT events' do
+    context 'when passing a valid authentication token' do
+      let!(:user) { Fabricate(:user) }
+
+      let(:base_params) do
+        {
+          access_token: user.access_token,
+          format: 'json'
+        }
+      end
+
+      let!(:user_event) do
+        Fabricate(:event, owner: user, name: 'The main event of the evening',
+                  department: 'one')
+      end
+
+      let!(:other_user_event) do
+        Fabricate(:event, name: 'The main event of the evening',
+                  department: 'other')
+      end
+
+      let(:params) do
+        {
+          event: {
+            name: 'Not the main anymore'
+          }
+        }.merge(base_params)
+      end
+
+      it 'should update the owner\'s event' do
+        put api_event_path(user_event), params
+
+        expect(response).to be_successful
+      end
+    end
   end
 end
