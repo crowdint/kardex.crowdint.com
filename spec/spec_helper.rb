@@ -16,6 +16,15 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
+VCR.configure do |c|
+  c.cassette_library_dir = 'spec/support/vcr_cassettes'
+  c.hook_into :webmock # or :fakeweb
+  c.default_cassette_options =  { record: :none }
+
+  #c.filter_sensitive_data('API_TOKEN') { '552dd8d56d0447dc888a10e3df073e5847510377' }
+  c.configure_rspec_metadata!
+end
+
 DatabaseCleaner.strategy = :truncation
 
 RSpec.configure do |config|

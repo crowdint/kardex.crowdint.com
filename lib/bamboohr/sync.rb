@@ -1,6 +1,19 @@
 module BambooHR
   class Sync
     def self.users
+      users = client.employee_list
+      users["employees"].each do |data|
+        create_user(data)
+      end
+    end
+
+    def self.create_user(data)
+      user = User.new
+      user.name = data["displayName"]
+      user.email = data["workEmail"]
+      user.department = data["department"]
+
+      user.save
     end
 
     def self.client
