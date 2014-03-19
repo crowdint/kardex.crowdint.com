@@ -3,7 +3,7 @@ module Api
     respond_to :json
 
     def index
-      render json: []
+      render json: Event.all
     end
   end
 end

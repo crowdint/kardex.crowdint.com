@@ -33,5 +33,7 @@ gem 'haml-rails'
 
 group :test do
   gem 'debugger'
+  gem 'database_cleaner'
+  gem 'fabrication'
   gem 'rspec-rails', '~> 3.0.0.beta'
 end
