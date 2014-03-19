@@ -37,24 +37,47 @@ describe 'Events API', api: true do
     context 'when passing a valid authentication token or none' do
       let!(:user) { Fabricate(:user) }
 
-      let!(:params) do
+      let(:base_params) do
         {
-          event: {
-            name: 'The super event',
-            department: 'A description'
-          },
           access_token: user.access_token,
           format: 'json'
         }
       end
 
-      it 'should create an event' do
-        expect(Event.count).to eq(0)
+      before { expect(Event.count).to eq(0) }
 
-        post api_events_path, params
+      context 'with full parameters' do
+        let!(:full_params) do
+          {
+            event: {
+              name: 'The super event',
+              department: 'A description'
+            }
+          }.merge(base_params)
+        end
 
-        expect(response).to be_successful
-        expect(response_json).to include('name', 'department')
+        it 'should create an event' do
+          post api_events_path, full_params
+
+          expect(response).to be_successful
+          expect(response_json).to include('name', 'department')
+        end
+      end
+
+      context 'with empty parameters' do
+        let!(:empty_params) do
+          {
+            event: {
+            }
+          }.merge(base_params)
+        end
+
+        it 'should fail creating an event' do
+          post api_events_path, empty_params
+
+          expect(response).not_to be_successful
+          expect(response_json).to include('errors')
+        end
       end
     end
 

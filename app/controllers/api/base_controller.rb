@@ -13,5 +13,13 @@ module Api
         respond_with([], status: 501)
       end
     end
+
+    rescue_from(ActionController::ParameterMissing) do |parameter_missing_exception|
+      render(
+        json: {
+          errors: "Required parameter missing: #{parameter_missing_exception.param}"
+        },
+        status: :bad_request)
+    end
   end
 end
