@@ -52,7 +52,6 @@ describe 'Events API', api: true do
         expect(Event.count).to eq(0)
 
         post api_events_path, params
-        binding.pry
 
         expect(response).to be_successful
         expect(response_json).to include('name', 'department')
