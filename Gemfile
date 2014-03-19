@@ -30,3 +30,7 @@ gem 'bootstrap-sass'
 gem 'devise'
 gem 'haml-rails'
 
+
+group :test do
+  gem 'rspec-rails'
+end
