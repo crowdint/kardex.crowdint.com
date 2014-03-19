@@ -26,11 +26,11 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 gem 'spring',        group: :development
 
+gem 'bamboohr', github: 'crowdint/bamboohr'
 gem 'bootstrap-sass'
 gem 'devise'
 gem 'haml-rails'
 
-
 group :test do
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 3.0.0.beta'
 end
