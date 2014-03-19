@@ -32,5 +32,6 @@ gem 'devise'
 gem 'haml-rails'
 
 group :test do
+  gem 'debugger'
   gem 'rspec-rails', '~> 3.0.0.beta'
 end
