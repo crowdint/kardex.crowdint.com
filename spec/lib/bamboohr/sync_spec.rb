@@ -48,11 +48,21 @@ describe BambooHR::Sync do
       expect(User).to receive(:new) { user }
       expect(user).to receive(:save)
 
+      expect(BambooHR::Sync).to receive(:generate_password) { '55555' }
       BambooHR::Sync.create_user(employee_data)
 
       expect(user.name).to eq "Cyan Aguirre"
       expect(user.email).to eq "cyan@crowd.com"
       expect(user.department).to eq "Development"
+      expect(user.password).to eq "55555"
+      expect(user.password_confirmation).to eq "55555"
+    end
+  end
+
+  describe :generate_password do
+    it "generates a random password based on current time" do
+      expect(Time).to receive(:now) { '55555' }
+      expect(BambooHR::Sync.generate_password).to eq 55555
     end
   end
 end
