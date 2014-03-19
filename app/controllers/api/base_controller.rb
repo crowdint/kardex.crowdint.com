@@ -4,9 +4,13 @@ module Api
 
     before_filter :validate_access_token
 
+    def current_user
+      @user ||= User.with_access_token(params[:access_token])
+    end
+
     def validate_access_token
-      unless User.valid_access_token?(params[:access_token])
-        render json: [], status: 501
+      unless current_user
+        respond_with([], status: 501)
       end
     end
   end
