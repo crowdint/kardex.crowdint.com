@@ -7,22 +7,13 @@ module Api
 
     def create
       event = current_user.events.create(event_params)
-
-      if event.new_record?
-        respond_with(event.errors.full_messages, status: :bad_request)
-      else
-        respond_with(:api, event)
-      end
+      respond_with(:api, event)
     end
 
     def update
       event = current_user.events.find(params[:id])
-
-      if event.update(event_params)
-        respond_with(:api, event)
-      else
-        respond_with(event.errors.full_messages, status: :bad_request)
-      end
+      event.update(event_params)
+      respond_with(:api, event)
     end
 
     private
