@@ -10,7 +10,7 @@ module Api
 
     def validate_access_token
       unless current_user
-        respond_with([], status: 501)
+        respond_with([], status: :bad_request)
       end
     end
 
