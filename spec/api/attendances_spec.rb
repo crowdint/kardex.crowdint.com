@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Attendances API', api: true do
-  let(:current_user) { Fabricate(:user) }
+  let(:current_user) { Kardex::User.create!(email: 'test@test.com') }
 
   let!(:base_params) do
     {
@@ -12,8 +12,16 @@ describe 'Attendances API', api: true do
 
   context 'GET attendances' do
     let!(:events) do
-      Fabricate.times(2, :event, owner: current_user) +
-        Fabricate.times(2, :event)
+      [].tap do |e|
+        2.times do
+          e << Kardex::Event.create!(owner: current_user,
+                                     name: 'Eventing',
+                                     department: 'the dep')
+          e << Kardex::Event.create!(owner: Kardex::User.create!(email: 'other@test.com'),
+                                     name: 'Eventing',
+                                     department: 'the dep')
+        end
+      end
     end
 
     it 'returns a list of attendances to all events' do
@@ -26,9 +34,17 @@ describe 'Attendances API', api: true do
 
   context 'POST attendances' do
     context 'when passing a valid authentication token' do
-      let!(:current_user_event) { Fabricate(:event, owner: current_user) }
+      let!(:current_user_event) do
+        Kardex::Event.create!(owner: current_user,
+                              name: 'Eventing',
+                              department: 'the dep')
+      end
 
-      let!(:event) { Fabricate(:event) }
+      let!(:event) do
+        Kardex::Event.create!(owner: Kardex::User.create!(email: 'other@test.com'),
+                              name: 'Eventing',
+                              department: 'the dep')
+      end
 
       it 'should create an attendance marker' do
         post api_attendances_path, { event_id: event.id }.merge(base_params)
@@ -47,7 +63,11 @@ describe 'Attendances API', api: true do
   end
 
   context 'GET attendances' do
-    let(:event) { Fabricate(:event, owner: current_user) }
+    let!(:event) do
+      Kardex::Event.create!(owner: Kardex::User.create!(email: 'other@test.com'),
+                            name: 'Eventing',
+                            department: 'the dep')
+    end
 
     it 'should return all attendances for a specific event' do
       get api_attendance_path(event), base_params

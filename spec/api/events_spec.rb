@@ -1,10 +1,20 @@
 require 'spec_helper'
 
 describe 'Events API', api: true do
+  let(:current_user) { Kardex::User.create!(email: 'test@test.com') }
 
   context 'GET events' do
     context 'when passing a valid authentication token' do
-      let!(:events) { Fabricate.times(2, :event) }
+      let!(:events) do
+        [
+          Kardex::Event.create!(owner: current_user,
+                                name: 'Eventing',
+                                department: 'the dep'),
+          Kardex::Event.create!(owner: Kardex::User.create!(email: 'test@test.com'),
+                                name: 'Eventing',
+                                department: 'the dep')
+        ]
+      end
 
       let!(:params) do
         {
@@ -35,16 +45,14 @@ describe 'Events API', api: true do
 
   context 'POST events' do
     context 'when passing a valid authentication token' do
-      let!(:user) { Fabricate(:user) }
-
       let(:base_params) do
         {
-          access_token: user.access_token,
+          access_token: current_user.access_token,
           format: 'json'
         }
       end
 
-      before { expect(Event.count).to eq(0) }
+      before { expect(Kardex::Event.count).to eq(0) }
 
       context 'with full parameters' do
         let!(:full_params) do
@@ -84,23 +92,23 @@ describe 'Events API', api: true do
 
   context 'PUT events' do
     context 'when passing a valid authentication token' do
-      let!(:user) { Fabricate(:user) }
-
       let(:base_params) do
         {
-          access_token: user.access_token,
+          access_token: current_user.access_token,
           format: 'json'
         }
       end
 
       let!(:user_event) do
-        Fabricate(:event, owner: user, name: 'The main event of the evening',
-                  department: 'one')
+        Kardex::Event.create!(owner: current_user,
+                              name: 'The main event of the evening',
+                              department: 'one')
       end
 
       let!(:other_user_event) do
-        Fabricate(:event, name: 'The main event of the evening',
-                  department: 'other')
+        Kardex::Event.create!(owner: Kardex::User.create!(email: 'other@test.com'),
+                              name: 'The main event of the evening',
+                              department: 'one')
       end
 
       let(:params) do

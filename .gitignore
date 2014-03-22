@@ -16,3 +16,5 @@
 /tmp
 
 config/secrets.local.yml
+spec/dummy/log/*
+spec/dummy/tmp/*
