@@ -2,6 +2,8 @@ require 'securerandom'
 
 module Kardex
   class User < ActiveRecord::Base
+    self.table_name = Kardex.user_table
+
     has_many :events, foreign_key: 'owner_id'
 
     has_many :attendances
